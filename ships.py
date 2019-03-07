@@ -1,5 +1,6 @@
 from tactic import game_tactic
 from random import choice
+from Priority_Tactic import PriorityTactic
 
 class ShipsGame():
     def __init__(self, tactic:game_tactic, number_of_games=1, ships_lenght=[4, 3, 3, 2, 2, 2, 1, 1, 1, 1], display_game_nr=True):
@@ -223,3 +224,8 @@ class ship():
                 return True
 
         return False
+
+if __name__ == '__main__':
+    game1 = ShipsGame(tactic=game_tactic, number_of_games=100)
+    game2 = ShipsGame(tactic=PriorityTactic, number_of_games=100)
+    
