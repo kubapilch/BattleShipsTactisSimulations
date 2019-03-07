@@ -3,135 +3,94 @@ from random import choice
 from pprint import pprint
 
 class ShipsGame():
-    def __init__(self, tactic:game_tactic, number_of_games=1):
+    def __init__(self, tactic:game_tactic, number_of_games=1, ships_lenght=[4, 3, 3, 2, 2, 2, 1, 1, 1, 1]):
         self.tactic = tactic
         self.number_of_games = number_of_games
         self.ships = []
+        self.ships_lenght = ships_lenght
 
-    def place_ships(self, board, ships_lenght=[4, 3, 3, 2, 2, 2, 1, 1, 1, 1,]):
+    def place_ships(self, board):
+        """
+        Place ships on board and return
+        """
         self.ships = []
 
-        # TODO: refactor this massive if statement, maybe
-        # for i in range(-1, 1):
-        #   for y in range(-1, 1):
-        for ship_lenght in sorted(ships_lenght, reverse=True):
+        for ship_lenght in sorted(self.ships_lenght, reverse=True):
+            
             # Find place for this ship
             while True:
+                
                 alingment = choice(['v', 'h'])
 
                 y = choice(range(len(board)))
                 x = choice(range(len(board[y])))
+                
+                taken = False
 
                 if not board[y][x] == 1:
+                    
                     # Place horizontaly
                     if alingment == 'h':
+                        
                         # Check if will be out of bounds if palced here
                         if x + ship_lenght <= len(board[0]):
+                            
                             for cell_x in range(x, x+ship_lenght):
-                                # Middle
-                                if board[y][cell_x]:
-                                    # Break the inner-loop, try again
-                                    break
-
-                                # Right middle
-                                if not cell_x+1 >= len(board[y]) and board[y][cell_x+1]:
-                                    # Break the inner-loop, try again
-                                    break
-
-                                # Top right
-                                if not (cell_x+1 >= len(board[y]) or y-1 < 0) and board[y-1][cell_x+1]:
-                                    # Break the inner-loop, try again
-                                    break
                                 
-                                # Bottom right
-                                if not (cell_x+1 >= len(board[y]) or y+1 >= len(board)) and board[y+1][cell_x+1]:
-                                    # Break the inner-loop, try again
-                                    break
-
-                                # Bottom middle
-                                if not y+1 >= len(board) and board[y+1][cell_x]:
-                                    # Break the inner-loop, try again
-                                    break
-                                
-                                # Top middle
-                                if not y-1 < 0 and board[y-1][cell_x]:
-                                    # Break the inner-loop, try again
-                                    break
-                                
-                                # Left top
-                                if not (y-1 < 0 or cell_x - 1 < 0) and board[y-1][cell_x-1]:
-                                    # Break the inner-loop, try again
-                                    break
-                                
-                                # Left middle
-                                if not cell_x - 1 < 0 and board[y][cell_x-1]:
-                                    # Break the inner-loop, try again
-                                    break
-
-                                # Left bottom
-                                if not (y+1 >= len(board) or cell_x - 1 < 0) and board[y+1][cell_x-1]:
-                                    # Break the inner-loop, try again
-                                    break
-
+                                for row in range(-1, 2):
+                                    for col in range(-1, 2):
+                                        
+                                        # Check if index out of range
+                                        if y + row < 0 or y + row >= len(board):
+                                            continue
+                                        
+                                        if cell_x + col < 0 or cell_x + col >= len(board):
+                                            continue
+                                        
+                                        if board[y + row][cell_x + col] == 1:
+                                            taken = True
+                                else:
+                                    if taken:
+                                        # Place is taken, break cell_x loop to avoid running else:
+                                        # Look for another spot
+                                        break
                             else:
-                                # Break main loop, place found
+                                # Place found break while loop
                                 break
 
                     # Place vericaly
                     if alingment == 'v':
+                        
                         # Check if will be out of bounds if placed here
                         if y + ship_lenght <= len(board):
+                            
+                            # Iterate by all cells in ship
                             for cell_y in range(y, y+ship_lenght):
-                                # Middle
-                                if board[cell_y][x]:
-                                    # Break the inner-loop, try again
-                                    break
-
-                                # Right middle
-                                if not x+1 >= len(board[y]) and board[cell_y][x+1]:
-                                    # Break the inner-loop, try again
-                                    break
-
-                                # Top right
-                                if not (cell_y-1 < 0 or x+1 >= len(board[y])) and board[cell_y-1][x+1]:
-                                    # Break the inner-loop, try again
-                                    break
                                 
-                                # Bottom right
-                                if (not (cell_y+1 >= len(board) or x+1 >= len(board[y]))) and board[cell_y+1][x+1]:
-                                    # Break the inner-loop, try again
-                                    break
-
-                                # Bottom middle
-                                if not cell_y+1 >= len(board) and board[cell_y+1][x]:
-                                    # Break the inner-loop, try again
-                                    break
-                                
-                                # Top middle
-                                if not cell_y-1 < 0 and board[cell_y-1][x]:
-                                    # Break the inner-loop, try again
-                                    break
-                                
-                                # Left top
-                                if not (cell_y-1 < 0 or x - 1 < 0) and board[cell_y-1][x-1]:
-                                    # Break the inner-loop, try again
-                                    break
-                                
-                                # Left middle
-                                if not x - 1 < 0 and board[cell_y][x-1]:
-                                    # Break the inner-loop, try again
-                                    break
-
-                                # Left bottom
-                                if not (cell_y+1 >= len(board) or x - 1 < 0) and board[cell_y+1][x-1]:
-                                    # Break the inner-loop, try again
-                                    break
+                                for row in range(-1, 2):
+                                    for col in range(-1, 2):
+                                        
+                                        # Check if index out of range
+                                        if cell_y + row < 0 or cell_y + row >= len(board):
+                                            continue
+                                        
+                                        if x + col < 0 or x + col >= len(board):
+                                            continue
+                                        
+                                        if board[cell_y + row][x + col]:
+                                            taken = True
+                                else:
+                                   if taken:
+                                        # Place is taken, break cell_y loop to avoid running else:
+                                        # Look for another spot
+                                        break
                             else:
-                                # Break main loop, place found
+                                # Place found break while loop
                                 break
 
             cordinates = []
 
+            # Create ship object with given cordinates and add it to self.ships
             for cord in range(ship_lenght):
                 if alingment == 'h':
                     board[y][x+cord] = 1
@@ -146,10 +105,13 @@ class ShipsGame():
 
     @staticmethod
     def check_if_ships_left(board):
+        """
+        Check if there are alive ships on a board
+        """
         for row in board:
             if 1 in row:
                 return True
-        pprint(board)
+
         return False        
 
     @staticmethod
@@ -158,6 +120,9 @@ class ShipsGame():
         return board
 
     def play(self):
+        """
+        Main game function
+        """
         # Make variable to count number of shots
         total_number_of_shots = 0
 
@@ -171,7 +136,7 @@ class ShipsGame():
             board = self.place_ships(board)
 
             # Load game tactic
-            this_game_tactic = self.tactic
+            this_game_tactic = self.tactic()
 
             # Create board that will contain only shots to pass to tactic
             tactic_board = [[0]*len(board) for _ in range(len(board))]
@@ -184,7 +149,7 @@ class ShipsGame():
                 
                 # Make sure that tactic didn't choose place that has been shot
                 while True:
-                    x, y = this_game_tactic.take_shot(tactic_board)
+                    x, y = this_game_tactic.take_shot(board=tactic_board)
 
                     shot = [x, y, False, False]
 
@@ -228,7 +193,7 @@ class ShipsGame():
             # Sum up shots
             total_number_of_shots += number_of_shots
 
-        print(f"Simulations for {self.tactic.name} ended, number of shots required to win: {total_number_of_shots/self.number_of_games}")
+        print(f"Simulations for {this_game_tactic.name} ended, average number of shots required to win: {total_number_of_shots/self.number_of_games}")
 
 class ship():
     def __init__(self, lenght, cordinates):
@@ -238,17 +203,24 @@ class ship():
         self.sunk_cells = 0
 
     def mark_hit(self):
+        """
+        Set cell as hit and check if ship is sunk, returns bool
+        """
         self.sunk_cells += 1
+
         if self.sunk_cells == self.lenght:
             self.sunk = True
 
         return self.sunk
     
     def check_if_hit(self, x, y):
+        """
+        Checks if given cordinates refers to a ship, returns bool
+        """
         for cell in self.cordinates:
             if cell == (x, y):
                 return True
 
         return False
 
-ShipsGame(tactic=game_tactic(name='Random Tactic'), number_of_games=100).play()
+# ShipsGame(tactic=game_tactic(name='Random Tactic'), number_of_games=100).play()
