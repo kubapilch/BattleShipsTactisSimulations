@@ -1,6 +1,5 @@
 from tactic import game_tactic
 from random import choice
-from pprint import pprint
 
 class ShipsGame():
     def __init__(self, tactic:game_tactic, number_of_games=1, ships_lenght=[4, 3, 3, 2, 2, 2, 1, 1, 1, 1]):
@@ -222,5 +221,3 @@ class ship():
                 return True
 
         return False
-
-# ShipsGame(tactic=game_tactic(name='Random Tactic'), number_of_games=100).play()

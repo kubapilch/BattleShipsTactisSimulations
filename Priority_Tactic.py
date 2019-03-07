@@ -1,9 +1,8 @@
 from tactic import game_tactic
 from ships import ShipsGame
-from pprint import pprint
 
 class PriorityTactic(game_tactic):
-    
+
     def __init__(self):
         # Initialize the super class
         super().__init__(name='Priority tactic')
@@ -83,5 +82,10 @@ class PriorityTactic(game_tactic):
 
                             if x + column < 0 or x + column >= len(self.guessing_board):
                                 continue
-                        
+
                             self.guessing_board[y+row][x+column] = -1
+
+
+g = ShipsGame(PriorityTactic, 1000)
+
+g.play()

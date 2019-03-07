@@ -16,6 +16,7 @@ class game_tactic():
             x = choice(range(10))
             y = choice(range(10))
 
+            # Check if this cell has been shot before
             if board[y][x] == 0:
                 break
 
@@ -27,5 +28,9 @@ class game_tactic():
     
     @last_shot.setter
     def last_shot(self, last):
+        """
+        Override to get feedback after every shot, last is a tuple that contains x cord, y cord, 
+        bool that is True if a ship was hit and bool if the ship was sunk [x, y, bool, bool]
+        """
         self.__last_shot = last
-        print(last)
+
