@@ -2,11 +2,12 @@ from tactic import game_tactic
 from random import choice
 
 class ShipsGame():
-    def __init__(self, tactic:game_tactic, number_of_games=1, ships_lenght=[4, 3, 3, 2, 2, 2, 1, 1, 1, 1]):
+    def __init__(self, tactic:game_tactic, number_of_games=1, ships_lenght=[4, 3, 3, 2, 2, 2, 1, 1, 1, 1], display_game_nr=True):
         self.tactic = tactic
         self.number_of_games = number_of_games
         self.ships = []
         self.ships_lenght = ships_lenght
+        self.display_game_nr = display_game_nr
 
     def place_ships(self, board):
         """
@@ -128,7 +129,8 @@ class ShipsGame():
         # Play specified number of games
         for game_number in range(1, self.number_of_games+1):
 
-            print(f'Now playing game nr {game_number}')
+            if self.display_game_nr:
+                print(f'Now playing game nr {game_number}')
 
             # Create board and place ships
             board = self.create_board()

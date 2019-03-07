@@ -84,8 +84,3 @@ class PriorityTactic(game_tactic):
                                 continue
 
                             self.guessing_board[y+row][x+column] = -1
-
-
-g = ShipsGame(PriorityTactic, 1000)
-
-g.play()
