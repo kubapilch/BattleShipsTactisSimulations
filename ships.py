@@ -1,6 +1,7 @@
 from tactic import game_tactic
 from random import choice
 from Priority_Tactic import PriorityTactic
+from pprint import pprint
 
 class ShipsGame():
     def __init__(self, tactic:game_tactic, number_of_games=1, ships_lenght=[4, 3, 3, 2, 2, 2, 1, 1, 1, 1], display_game_nr=True):
@@ -19,7 +20,28 @@ class ShipsGame():
         for ship_lenght in sorted(self.ships_lenght, reverse=True):
             
             # Find place for this ship
-            while True:
+            x, y, alingment = self.find_place(board, ship_lenght)
+            
+            cordinates = []
+
+            # Create ship object with given cordinates and add it to self.ships
+            for cord in range(ship_lenght):
+                if alingment == 'h':
+                    board[y][x+cord] = 1
+                    cordinates.append((x+cord, y))
+                else:
+                    board[y+cord][x] = 1
+                    cordinates.append((x, y+cord))
+
+            self.ships.append(ship(ship_lenght, cordinates))
+
+        return board
+    
+    def find_place(self, board, ship_lenght):
+        """
+        Find a place on a board for a ship with certain lenght and return cordinates
+        """
+        while True:
                 
                 alingment = choice(['v', 'h'])
 
@@ -50,14 +72,14 @@ class ShipsGame():
                                         
                                         if board[y + row][cell_x + col] == 1:
                                             taken = True
-                                else:
-                                    if taken:
-                                        # Place is taken, break cell_x loop to avoid running else:
-                                        # Look for another spot
-                                        break
-                            else:
-                                # Place found break while loop
-                                break
+
+                                # If place taken find to another spot
+                                if taken:
+                                    break
+                            
+                            # Place found return cordinates
+                            if not taken:
+                                return x, y, alingment
 
                     # Place vericaly
                     if alingment == 'v':
@@ -66,8 +88,7 @@ class ShipsGame():
                         if y + ship_lenght <= len(board):
                             
                             # Iterate by all cells in ship
-                            for cell_y in range(y, y+ship_lenght):
-                                
+                            for cell_y in range(y, y+ship_lenght): 
                                 for row in range(-1, 2):
                                     for col in range(-1, 2):
                                         
@@ -80,29 +101,15 @@ class ShipsGame():
                                         
                                         if board[cell_y + row][x + col]:
                                             taken = True
-                                else:
-                                   if taken:
-                                        # Place is taken, break cell_y loop to avoid running else:
-                                        # Look for another spot
-                                        break
-                            else:
-                                # Place found break while loop
-                                break
-
-            cordinates = []
-
-            # Create ship object with given cordinates and add it to self.ships
-            for cord in range(ship_lenght):
-                if alingment == 'h':
-                    board[y][x+cord] = 1
-                    cordinates.append((x+cord, y))
-                else:
-                    board[y+cord][x] = 1
-                    cordinates.append((x, y+cord))
-
-            self.ships.append(ship(ship_lenght, cordinates))
-
-        return board
+                                
+                                # If place taken find to another spot
+                                if taken:
+                                    break
+                            
+                            # Place found return cordinates
+                            if not taken:
+                                return x, y, alingment
+        
 
     @staticmethod
     def check_if_ships_left(board):
@@ -226,6 +233,7 @@ class ship():
         return False
 
 if __name__ == '__main__':
-    game1 = ShipsGame(tactic=game_tactic, number_of_games=100)
-    game2 = ShipsGame(tactic=PriorityTactic, number_of_games=100)
+    game = ShipsGame(tactic=PriorityTactic, number_of_games=100)
+    game.play()
+    
     

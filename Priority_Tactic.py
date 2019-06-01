@@ -1,5 +1,4 @@
 from tactic import game_tactic
-from ships import ShipsGame
 
 class PriorityTactic(game_tactic):
 
